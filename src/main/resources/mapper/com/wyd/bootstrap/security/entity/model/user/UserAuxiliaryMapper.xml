@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyd.bootstrap.security.mapper.UserAuxiliaryMapper">
+    <resultMap id="BaseResultMap" type="com.wyd.bootstrap.security.entity.model.user.UserAuxiliary">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="user_info_id" jdbcType="VARCHAR" property="userInfoId"/>
+        <result column="open_id" jdbcType="VARCHAR" property="openId"/>
+        <result column="session_key" jdbcType="VARCHAR" property="sessionKey"/>
+        <result column="commercial_id" jdbcType="VARCHAR" property="commercialId"/>
+    </resultMap>
+    <resultMap id="userInfoResultMap" type="UserInfo">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="real_name" jdbcType="VARCHAR" property="realName"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="valid_date_end" jdbcType="TIMESTAMP" property="validDateEnd"/>
+        <result column="valid_date_start" jdbcType="TIMESTAMP" property="validDateStart"/>
+        <result column="is_valid" jdbcType="CHAR" property="isValid"/>
+        <result column="mobile_phone" jdbcType="VARCHAR" property="mobilePhone"/>
+        <result column="telephone" jdbcType="VARCHAR" property="telephone"/>
+        <result column="city" jdbcType="VARCHAR" property="city"/>
+        <result column="country" jdbcType="VARCHAR" property="country"/>
+        <result column="province" jdbcType="VARCHAR" property="province"/>
+        <result column="gender" jdbcType="CHAR" property="gender"/>
+        <result column="nick_name" jdbcType="VARCHAR" property="nickName"/>
+        <result column="identify_no" jdbcType="VARCHAR" property="identifyNo"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    user_info_id, open_id, session_key, commercial_id
+  </sql>
+
+    <sql id="UserInfo_Column_List">
+    id, username, real_name, password, valid_date_end, valid_date_start, is_valid, mobile_phone,
+    telephone, city, country, province, gender, nick_name, identify_no
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user_auxiliary
+        where user_info_id = #{userInfoId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from user_auxiliary
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+    <insert id="insert" parameterType="com.wyd.bootstrap.security.entity.model.user.UserAuxiliary">
+    insert into user_auxiliary (id, user_info_id, open_id, session_key,
+      commercial_id)
+    values (#{id,jdbcType=VARCHAR}, #{userInfoId,jdbcType=VARCHAR}, #{openId,jdbcType=VARCHAR}, #{sessionKey,jdbcType=VARCHAR},
+      #{commercialId,jdbcType=VARCHAR})
+  </insert>
+    <insert id="insertSelective" parameterType="com.wyd.bootstrap.security.entity.model.user.UserAuxiliary">
+        insert into user_auxiliary
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="userInfoId != null">
+                user_info_id,
+            </if>
+            <if test="openId != null">
+                open_id,
+            </if>
+            <if test="sessionKey != null">
+                session_key,
+            </if>
+            <if test="commercialId != null">
+                commercial_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="userInfoId != null">
+                #{userInfoId,jdbcType=VARCHAR},
+            </if>
+            <if test="openId != null">
+                #{openId,jdbcType=VARCHAR},
+            </if>
+            <if test="sessionKey != null">
+                #{sessionKey,jdbcType=VARCHAR},
+            </if>
+            <if test="commercialId != null">
+                #{commercialId,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.wyd.bootstrap.security.entity.model.user.UserAuxiliary">
+        update user_auxiliary
+        <set>
+            <if test="userInfoId != null">
+                user_info_id = #{userInfoId,jdbcType=VARCHAR},
+            </if>
+            <if test="openId != null">
+                open_id = #{openId,jdbcType=VARCHAR},
+            </if>
+            <if test="sessionKey != null">
+                session_key = #{sessionKey,jdbcType=VARCHAR},
+            </if>
+            <if test="commercialId != null">
+                commercial_id = #{commercialId,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.wyd.bootstrap.security.entity.model.user.UserAuxiliary">
+    update user_auxiliary
+    set user_info_id = #{userInfoId,jdbcType=VARCHAR},
+      open_id = #{openId,jdbcType=VARCHAR},
+      session_key = #{sessionKey,jdbcType=VARCHAR},
+      commercial_id = #{commercialId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+    <select id="getUserInfoByOpenId" parameterType="java.lang.String" resultMap="userInfoResultMap">
+        select
+        <include refid="UserInfo_Column_List"/>
+        from user_info
+        where id = (
+        select user_info_id from user_auxiliary where open_id = #{openId,jdbcType=VARCHAR}
+        and commercial_id = #{commercialId,jdbcType=VARCHAR}
+        )
+    </select>
+    <select id="selectByOpenId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user_auxiliary
+        where open_id = #{openId,jdbcType=VARCHAR}
+    </select>
+    <insert id="insertOrUpdateUserAuxiliary" parameterType="com.wyd.bootstrap.security.entity.model.user.UserAuxiliary">
+    insert into user_auxiliary (id, user_info_id, open_id, session_key,
+      commercial_id)
+    values (#{id,jdbcType=VARCHAR}, #{userInfoId,jdbcType=VARCHAR}, #{openId,jdbcType=VARCHAR}, #{sessionKey,jdbcType=VARCHAR},
+      #{commercialId,jdbcType=VARCHAR})
+      ON DUPLICATE KEY UPDATE
+      user_info_id = values (user_info_id),
+      open_id = values (open_id),
+      session_key = values (session_key),
+      commercial_id = values (commercial_id)
+
+  </insert>
+</mapper>

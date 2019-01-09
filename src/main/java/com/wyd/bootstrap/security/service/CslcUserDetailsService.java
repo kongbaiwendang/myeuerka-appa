@@ -27,8 +27,15 @@ public interface CslcUserDetailsService extends UserDetailsService{
 	public boolean userExists(String username);
 	
 	/**
-	 * 
+	 * 创建用户
 	 * @return
 	 */
 	public UserInfo createSysUser();
+
+	/**
+	 * 根据OpenId查询用户信息
+	 */
+	public UserInfo getUserInfoByOpenId();
+
+
 }

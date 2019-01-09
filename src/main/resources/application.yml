@@ -1,1 +1,48 @@
-spring:  application:    name: AppA  cloud:    service-registry:      auto-registration:        enabled: true  redis:    host: 127.0.0.1    port: 16379  datasource:    hikari:      jdbc-url: jdbc:mysql://127.0.0.1:3306/demodb      driver-class-name: com.mysql.cj.jdbc.Driver      username: test      password: test    url: jdbc:mysql://127.0.0.1:3306/demodbmanagement:  endpoints:    enabled-by-default: trueserver:  port: 8080eureka:  instance:    prefer-ip-address: true    instance-id: ${spring.cloud.client.ip-address}:${server.port}      client:    serviceUrl:      defaultZone: http://user:user@127.0.0.1:8761/eureka/      #healthcheck    healthcheck:      enabled: truemybatis:  typeAliasesPackage: com.wyd.bootstrap.security.entity.model.user  mapperLocations: classpath:mapper/**/*.xml
+spring:
+  application:
+    name: AppA
+  cloud:
+    service-registry:
+      auto-registration:
+        enabled: true
+  redis:
+    host: 127.0.0.1
+    port: 16379
+  datasource:
+    hikari:
+      jdbc-url: jdbc:mysql://127.0.0.1:3306/demodb?serverTimezone=GMT%2B8&characterEncoding=utf-8
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      username: test
+      password: test
+    url: jdbc:mysql://127.0.0.1:3306/demodb?serverTimezone=GMT%2B8&characterEncoding=utf-8
+
+management:
+  endpoints:
+    enabled-by-default: true
+server:
+  port: 8080
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
+    
+  client:
+    serviceUrl:
+      defaultZone: http://user:user@127.0.0.1:8761/eureka/
+      #healthcheck
+    healthcheck:
+      enabled: true
+
+mybatis:
+  typeAliasesPackage: com.wyd.bootstrap.security
+  mapperLocations: classpath:mapper/**/*.xml
+
+wechat:
+  openapiurl: https://api.weixin.qq.com/sns/jscode2session
+  appid: wx5ab956d66af555a8
+  secret_key: 2b8e767fbdd37d0b4e45d6f1fc72d69d
+springfox:
+  documentation:
+    swagger:
+      v2:
+        path: /swagger

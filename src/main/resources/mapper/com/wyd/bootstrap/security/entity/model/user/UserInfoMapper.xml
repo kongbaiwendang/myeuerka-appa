@@ -4,14 +4,23 @@
   <resultMap id="BaseResultMap" type="com.wyd.bootstrap.security.entity.model.user.UserInfo">
     <id column="id" jdbcType="VARCHAR" property="id" />
     <result column="username" jdbcType="VARCHAR" property="username" />
-    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="real_name" jdbcType="VARCHAR" property="realName" />
     <result column="password" jdbcType="VARCHAR" property="password" />
-    <result column="valid_date_start" jdbcType="TIMESTAMP" property="validDateStart" />
     <result column="valid_date_end" jdbcType="TIMESTAMP" property="validDateEnd" />
+    <result column="valid_date_start" jdbcType="TIMESTAMP" property="validDateStart" />
     <result column="is_valid" jdbcType="CHAR" property="isValid" />
+    <result column="mobile_phone" jdbcType="VARCHAR" property="mobilePhone" />
+    <result column="telephone" jdbcType="VARCHAR" property="telephone" />
+    <result column="city" jdbcType="VARCHAR" property="city" />
+    <result column="country" jdbcType="VARCHAR" property="country" />
+    <result column="province" jdbcType="VARCHAR" property="province" />
+    <result column="gender" jdbcType="CHAR" property="gender" />
+    <result column="nick_name" jdbcType="VARCHAR" property="nickName" />
+    <result column="identify_no" jdbcType="VARCHAR" property="identifyNo" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, username, name, password, valid_date_start, valid_date_end, is_valid
+    id, username, real_name, password, valid_date_end, valid_date_start, is_valid, mobile_phone,
+    telephone, city, country, province, gender, nick_name, identify_no
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
@@ -24,12 +33,18 @@
     where id = #{id,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.wyd.bootstrap.security.entity.model.user.UserInfo">
-    insert into user_info (id, username, name, 
-      password, valid_date_start, valid_date_end, 
-      is_valid)
-    values (#{id,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
-      #{password,jdbcType=VARCHAR}, #{validDateStart,jdbcType=TIMESTAMP}, #{validDateEnd,jdbcType=TIMESTAMP}, 
-      #{isValid,jdbcType=CHAR})
+    insert into user_info (id, username, real_name,
+      password, valid_date_end, valid_date_start, 
+      is_valid, mobile_phone, telephone, 
+      city, country, province, 
+      gender, nick_name, identify_no
+      )
+    values (#{id,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, #{realName,jdbcType=VARCHAR},
+      #{password,jdbcType=VARCHAR}, #{validDateEnd,jdbcType=TIMESTAMP}, #{validDateStart,jdbcType=TIMESTAMP}, 
+      #{isValid,jdbcType=CHAR}, #{mobilePhone,jdbcType=VARCHAR}, #{telephone,jdbcType=VARCHAR}, 
+      #{city,jdbcType=VARCHAR}, #{country,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, 
+      #{gender,jdbcType=CHAR}, #{nickName,jdbcType=VARCHAR}, #{identifyNo,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.wyd.bootstrap.security.entity.model.user.UserInfo">
     insert into user_info
@@ -40,20 +55,44 @@
       <if test="username != null">
         username,
       </if>
-      <if test="name != null">
-        name,
+      <if test="realName != null">
+        real_name,
       </if>
       <if test="password != null">
         password,
       </if>
-      <if test="validDateStart != null">
-        valid_date_start,
-      </if>
       <if test="validDateEnd != null">
         valid_date_end,
       </if>
+      <if test="validDateStart != null">
+        valid_date_start,
+      </if>
       <if test="isValid != null">
         is_valid,
+      </if>
+      <if test="mobilePhone != null">
+        mobile_phone,
+      </if>
+      <if test="telephone != null">
+        telephone,
+      </if>
+      <if test="city != null">
+        city,
+      </if>
+      <if test="country != null">
+        country,
+      </if>
+      <if test="province != null">
+        province,
+      </if>
+      <if test="gender != null">
+        gender,
+      </if>
+      <if test="nickName != null">
+        nick_name,
+      </if>
+      <if test="identifyNo != null">
+        identify_no,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -63,20 +102,44 @@
       <if test="username != null">
         #{username,jdbcType=VARCHAR},
       </if>
-      <if test="name != null">
-        #{name,jdbcType=VARCHAR},
+      <if test="realName != null">
+        #{realName,jdbcType=VARCHAR},
       </if>
       <if test="password != null">
         #{password,jdbcType=VARCHAR},
       </if>
-      <if test="validDateStart != null">
-        #{validDateStart,jdbcType=TIMESTAMP},
-      </if>
       <if test="validDateEnd != null">
         #{validDateEnd,jdbcType=TIMESTAMP},
       </if>
+      <if test="validDateStart != null">
+        #{validDateStart,jdbcType=TIMESTAMP},
+      </if>
       <if test="isValid != null">
         #{isValid,jdbcType=CHAR},
+      </if>
+      <if test="mobilePhone != null">
+        #{mobilePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="telephone != null">
+        #{telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null">
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null">
+        #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null">
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null">
+        #{gender,jdbcType=CHAR},
+      </if>
+      <if test="nickName != null">
+        #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="identifyNo != null">
+        #{identifyNo,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -86,20 +149,44 @@
       <if test="username != null">
         username = #{username,jdbcType=VARCHAR},
       </if>
-      <if test="name != null">
-        name = #{name,jdbcType=VARCHAR},
+      <if test="realName != null">
+        real_name = #{realName,jdbcType=VARCHAR},
       </if>
       <if test="password != null">
         password = #{password,jdbcType=VARCHAR},
       </if>
-      <if test="validDateStart != null">
-        valid_date_start = #{validDateStart,jdbcType=TIMESTAMP},
-      </if>
       <if test="validDateEnd != null">
         valid_date_end = #{validDateEnd,jdbcType=TIMESTAMP},
       </if>
+      <if test="validDateStart != null">
+        valid_date_start = #{validDateStart,jdbcType=TIMESTAMP},
+      </if>
       <if test="isValid != null">
         is_valid = #{isValid,jdbcType=CHAR},
+      </if>
+      <if test="mobilePhone != null">
+        mobile_phone = #{mobilePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="telephone != null">
+        telephone = #{telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null">
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null">
+        country = #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null">
+        province = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null">
+        gender = #{gender,jdbcType=CHAR},
+      </if>
+      <if test="nickName != null">
+        nick_name = #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="identifyNo != null">
+        identify_no = #{identifyNo,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
@@ -107,18 +194,19 @@
   <update id="updateByPrimaryKey" parameterType="com.wyd.bootstrap.security.entity.model.user.UserInfo">
     update user_info
     set username = #{username,jdbcType=VARCHAR},
-      name = #{name,jdbcType=VARCHAR},
+      real_name = #{realName,jdbcType=VARCHAR},
       password = #{password,jdbcType=VARCHAR},
-      valid_date_start = #{validDateStart,jdbcType=TIMESTAMP},
       valid_date_end = #{validDateEnd,jdbcType=TIMESTAMP},
-      is_valid = #{isValid,jdbcType=CHAR}
+      valid_date_start = #{validDateStart,jdbcType=TIMESTAMP},
+      is_valid = #{isValid,jdbcType=CHAR},
+      mobile_phone = #{mobilePhone,jdbcType=VARCHAR},
+      telephone = #{telephone,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      country = #{country,jdbcType=VARCHAR},
+      province = #{province,jdbcType=VARCHAR},
+      gender = #{gender,jdbcType=CHAR},
+      nick_name = #{nickName,jdbcType=VARCHAR},
+      identify_no = #{identifyNo,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
-
-  <select id="selectByUserName" parameterType="java.lang.String" resultMap="BaseResultMap" resultType="com.wyd.bootstrap.security.entity.model.user.UserInfo">
-    select
-    <include refid="Base_Column_List" />
-    from user_info
-    where username = #{username,jdbcType=VARCHAR}
-  </select>
 </mapper>

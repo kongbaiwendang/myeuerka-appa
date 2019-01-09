@@ -2,7 +2,6 @@ package com.wyd.bootstrap.security.filter;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.Base64;
 import java.util.Map;
 
 import javax.servlet.FilterChain;
@@ -11,13 +10,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.wyd.bootstrap.security.entity.model.user.UserInfo;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.SpringSecurityMessageSource;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.nimbusds.jose.JOSEException;
@@ -27,6 +24,9 @@ import com.wyd.bootstrap.security.util.JwtUtil;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 
+/**
+ * 判断是否登录的过滤器
+ */
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	

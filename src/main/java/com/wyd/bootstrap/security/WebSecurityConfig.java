@@ -32,7 +32,7 @@ public class WebSecurityConfig  implements WebMvcConfigurer {
 	 * @throws Exception
 	 */
 	@Bean
-    public UserDetailsService userDetailsService() throws Exception {
+    public CslcUserDetailsService userDetailsService() throws Exception {
 //        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
 //        manager.createUser(User.withDefaultPasswordEncoder().username("user").password("password").roles("USER").build());
 		CslcUserDetailsService manager = new CslcUserDetailsServiceImpl();

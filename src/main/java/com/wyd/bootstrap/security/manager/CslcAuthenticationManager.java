@@ -1,8 +1,9 @@
-package com.wyd.bootstrap.security.service;
+package com.wyd.bootstrap.security.manager;
 
 import com.wyd.bootstrap.security.entity.model.user.UserInfo;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import com.wyd.bootstrap.security.service.CslcUserDetailsService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -15,7 +16,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.SpringSecurityMessageSource;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
 import org.springframework.security.core.authority.mapping.NullAuthoritiesMapper;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.Assert;
@@ -23,21 +23,24 @@ import org.springframework.util.Assert;
 
 @EnableWebSecurity
 public class CslcAuthenticationManager implements AuthenticationProvider {
-	protected final Log logger = LogFactory.getLog(getClass());
+	private Logger logger = LoggerFactory.getLogger(CslcAuthenticationManager.class);
 
-	private static final String USER_NOT_FOUND_PASSWORD = "userNotFoundPassword";
 	protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
 	protected boolean hideUserNotFoundExceptions = true;
-	private boolean forcePrincipalAsString = false;
 	private GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
 
-	private volatile String userNotFoundEncodedPassword;
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
 	@Autowired
 	private CslcUserDetailsService cslcUserDetailsService;
 
+	/**
+	 * 自定义校验方法
+	 * @param authentication
+	 * @return
+	 * @throws AuthenticationException
+	 */
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		Assert.isInstanceOf(UsernamePasswordAuthenticationToken.class, authentication,
@@ -68,11 +71,6 @@ public class CslcAuthenticationManager implements AuthenticationProvider {
 		}
 
 		Object principalToReturn = user;
-
-		if (forcePrincipalAsString) {
-			principalToReturn = user.getUsername();
-		}
-//		return authentication;
 		return createSuccessAuthentication(principalToReturn, authentication, user);
 	}
 
@@ -91,42 +89,17 @@ public class CslcAuthenticationManager implements AuthenticationProvider {
 	 */
 	protected final UserInfo retrieveUser(String username, UsernamePasswordAuthenticationToken authentication)
 			throws AuthenticationException {
-		prepareTimingAttackProtection();
 		try {
 			UserInfo loadedUser = cslcUserDetailsService.getSysUserByUsername(username);
 			if (loadedUser == null) {
+				logger.error("用户:{} 不存在。",username);
 				throw new InternalAuthenticationServiceException(
 						"CslcUserDetailsService returned null, which is an interface contract violation");
 			}
 			return loadedUser;
-		} catch (UsernameNotFoundException ex) {
-			mitigateAgainstTimingAttack(authentication);
-			throw ex;
-		} catch (InternalAuthenticationServiceException ex) {
-			throw ex;
 		} catch (Exception ex) {
+			logger.error("用户:{} 登录失败。",username,ex);
 			throw new InternalAuthenticationServiceException(ex.getMessage(), ex);
-		}
-	}
-
-	/**
-	 * 判断是否启用了密码策略
-	 */
-	private void prepareTimingAttackProtection() {
-		if (this.userNotFoundEncodedPassword == null) {
-			this.userNotFoundEncodedPassword = this.passwordEncoder.encode(USER_NOT_FOUND_PASSWORD);
-		}
-	}
-
-	/**
-	 * 查询用户异常处理
-	 * 
-	 * @param authentication
-	 */
-	private void mitigateAgainstTimingAttack(UsernamePasswordAuthenticationToken authentication) {
-		if (authentication.getCredentials() != null) {
-			String presentedPassword = authentication.getCredentials().toString();
-			this.passwordEncoder.matches(presentedPassword, this.userNotFoundEncodedPassword);
 		}
 	}
 
@@ -147,9 +120,6 @@ public class CslcAuthenticationManager implements AuthenticationProvider {
 		}
 
 		String presentedPassword = authentication.getCredentials().toString();
-		System.out.println(presentedPassword);
-		System.out.println(passwordEncoder.encode(presentedPassword));
-		System.out.println(passwordEncoder.matches(presentedPassword, userInfo.getPassword()));
 		if (!passwordEncoder.matches(presentedPassword, userInfo.getPassword())) {
 			logger.debug("Authentication failed: password does not match stored value");
 

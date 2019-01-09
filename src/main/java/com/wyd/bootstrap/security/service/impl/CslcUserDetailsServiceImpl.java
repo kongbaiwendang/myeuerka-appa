@@ -2,16 +2,12 @@ package com.wyd.bootstrap.security.service.impl;
 
 import com.wyd.bootstrap.security.entity.model.user.UserInfo;
 import com.wyd.bootstrap.security.mapper.UserInfoMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import com.wyd.bootstrap.security.service.CslcUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import com.wyd.bootstrap.security.service.CslcUserDetailsService;
-
 import javax.annotation.Resource;
 
-@EnableWebSecurity
 public class CslcUserDetailsServiceImpl implements CslcUserDetailsService{
 
 	@Resource
@@ -31,15 +27,12 @@ public class CslcUserDetailsServiceImpl implements CslcUserDetailsService{
 		UserInfo userInfo = null;
 		if("user1".equals(username)) {
 			userInfo = new UserInfo();
-			userInfo.setId("saljdfl");
-			userInfo.setName("用户1");
+			userInfo.setId("00001");
+			userInfo.setRealName("用户1");
 			userInfo.setPassword("{bcrypt}$2a$10$CQTr0OWzo6F8DH6uMg.qHuTaSBLLz/KzKbnx9orCn83CniUyiwZwK");
 			userInfo.setUsername("user1");
 		}
-//		userInfoMapper.selectByPrimaryKey("8a9554e6-6570-404c-8661-8e0347c83fbd");
-		userInfo = userInfoMapper.selectByUserName(username);
-		
-		
+		userInfo = userInfoMapper.selectByPrimaryKey(username);
 		return userInfo;
 	}
 
@@ -58,6 +51,11 @@ public class CslcUserDetailsServiceImpl implements CslcUserDetailsService{
 	@Override
 	public UserInfo createSysUser() {
 		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public UserInfo getUserInfoByOpenId() {
 		return null;
 	}
 
